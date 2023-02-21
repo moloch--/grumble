@@ -34,7 +34,7 @@ type completer struct {
 	commands *Commands
 }
 
-func newCompleter(commands *Commands) *completer {
+func NewCompleter(commands *Commands) *completer {
 	return &completer{
 		commands: commands,
 	}
