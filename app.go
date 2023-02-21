@@ -413,7 +413,7 @@ func (a *App) setReadlineDefaults(config *readline.Config) {
 	config.DisableAutoSaveHistory = true
 	config.HistoryFile = a.config.HistoryFile
 	config.HistoryLimit = a.config.HistoryLimit
-	config.AutoComplete = NewCompleter(&a.commands)
+	config.AutoComplete = newCompleter(&a.commands)
 	config.VimMode = a.config.VimMode
 }
 
