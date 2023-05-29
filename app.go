@@ -29,6 +29,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/desertbit/closer/v3"
 	shlex "github.com/desertbit/go-shlex"
@@ -493,6 +494,9 @@ Loop:
 
 		// Save command history.
 		err = a.rl.SaveHistory(line)
+		for _, dupeWriter := range a.duplicateWriters {
+			dupeWriter.Write([]byte(fmt.Sprintf("[%s] "+line, time.Now().UTC())))
+		}
 		if err != nil {
 			a.PrintError(err)
 			continue Loop
