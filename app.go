@@ -58,6 +58,8 @@ type App struct {
 	printCommandHelp func(a *App, cmd *Command, shell bool)
 	interruptHandler func(a *App, count int)
 	printASCIILogo   func(a *App)
+
+	duplicateWriters map[string]io.Writer
 }
 
 // New creates a new app.
@@ -202,7 +204,26 @@ func (a *App) Stdout() io.Writer {
 	if a.rl != nil {
 		return a.rl.Stdout()
 	}
-	return os.Stdout
+	writers := []io.Writer{os.Stdout}
+	for _, w := range a.duplicateWriters {
+		writers = append(writers, w)
+	}
+	return io.MultiWriter(writers...)
+}
+
+// SetDuplicateWriter - set a writer to duplicate output to.
+func (a *App) SetDuplicateWriter(name string, dupe io.Writer) {
+	a.duplicateWriters[name] = dupe
+}
+
+// UnsetDuplicateWriter - remove a writer from the duplicate output list.
+func (a *App) UnsetDuplicateWriter(name string) {
+	delete(a.duplicateWriters, name)
+}
+
+// ResetDuplicateWriters - remove all writers from the duplicate output list.
+func (a *App) ResetDuplicateWriters() {
+	a.duplicateWriters = map[string]io.Writer{}
 }
 
 // Stderr returns a writer to Stderr, using readline if available.
