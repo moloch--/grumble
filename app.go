@@ -81,6 +81,7 @@ func New(c *Config) (a *App) {
 		printHelp:        defaultPrintHelp,
 		printCommandHelp: defaultPrintCommandHelp,
 		interruptHandler: defaultInterruptHandler,
+		duplicateWriters: map[string]io.Writer{},
 	}
 	if c.InterruptHandler != nil {
 		a.interruptHandler = c.InterruptHandler
