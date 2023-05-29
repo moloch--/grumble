@@ -201,10 +201,12 @@ func (a *App) Write(p []byte) (int, error) {
 // Stdout returns a writer to Stdout, using readline if available.
 // Note that calling before Run() will return a different instance.
 func (a *App) Stdout() io.Writer {
+	writers := []io.Writer{}
 	if a.rl != nil {
-		return a.rl.Stdout()
+		writers = append(writers, a.rl.Stdout())
+	} else {
+		writers = append(writers, os.Stdout)
 	}
-	writers := []io.Writer{os.Stdout}
 	for _, w := range a.duplicateWriters {
 		writers = append(writers, w)
 	}
